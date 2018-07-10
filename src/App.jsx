@@ -23,7 +23,7 @@ export default class App extends Component {
 
   submit() {
     this.getWeather();
-    //this.getNasa();
+    //this.getNasa(); <-- used inside getWeather()
   }
 
   getWeather() {
