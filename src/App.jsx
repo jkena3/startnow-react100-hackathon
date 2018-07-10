@@ -13,6 +13,8 @@ export default class App extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.submit = this.submit.bind(this);
+    this.getWeather = this.getWeather.bind(this);
+    this.getNasa = this.getNasa.bind(this);
   };
 
   handleChange(e) {
@@ -20,6 +22,11 @@ export default class App extends Component {
   }
 
   submit() {
+    this.getWeather();
+    //this.getNasa();
+  }
+
+  getWeather() {
     const reqURL = "http://api.openweathermap.org/data/2.5/weather?q=" + this.state.city + "&APPID=74c7081a5b0e2e16de05649f7db7a09f";
     axios.get(reqURL)
     .then((res) => {
@@ -27,11 +34,25 @@ export default class App extends Component {
         this.setState({
           weather: res.data.weather[0].main
         })
+        this.getNasa(); 
       }
     })
-    .catch((error) => {
-      alert("Enter another city");
-      console.log(error) //Logs a string: Error: Request failed with status code 404
+    .catch(function (error) {
+      if (error.response) {
+        alert('Enter another city');
+      }
+    });
+  }
+
+  getNasa() {
+    const reqURL2 = "https://api.nasa.gov/planetary/apod?api_key=q2dLzOWiX7Rd7wHY6GOKjonCKQLIiO8rxdYTO7aq"
+    axios.get(reqURL2)
+    .then((res) => {
+      if (res.status === 200) {
+        this.setState({
+          image: res.data.url
+        })
+      }
     })
   }
 
@@ -86,7 +107,7 @@ export default class App extends Component {
                     <div className='panel-heading' id='header'>NASA Photo</div>
                     <div className='panel-body'>
                       <div id='image' className='container-fluid' onChange={this.handleChange}>
-                        {this.state.image}
+                        <img src={this.state.image} className="img-responsive" />
                       </div>
                     </div>
                   </div>
